@@ -15,7 +15,7 @@ local config = {
 }
 
 local allItems = {
-   "Noobini Pizzanini $25",
+  "Noobini Pizzanini $25",
 "Lirilì Larilà $250",
 "Tim Cheese $500",
 "Fluriflura $750",
@@ -323,78 +323,102 @@ local gui = nil
 local mainFrame = nil
 local menuVisible = true
 
--- Create GUI
+-- Create GUI (Pulsar X Style)
 local function createGUI()
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "AutoBuyMenu"
     screenGui.ResetOnSpawn = false
     screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     
-    -- Toggle Button (Always Visible)
+    -- Toggle Button
     local toggleMenuBtn = Instance.new("TextButton")
     toggleMenuBtn.Name = "ToggleMenuBtn"
-    toggleMenuBtn.Size = UDim2.new(0, 50, 0, 50)
-    toggleMenuBtn.Position = UDim2.new(0, 10, 0.5, -25)
-    toggleMenuBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
+    toggleMenuBtn.Size = UDim2.new(0, 45, 0, 45)
+    toggleMenuBtn.Position = UDim2.new(0, 10, 0.5, -22)
+    toggleMenuBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
     toggleMenuBtn.Text = "☰"
     toggleMenuBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    toggleMenuBtn.TextSize = 24
+    toggleMenuBtn.TextSize = 20
     toggleMenuBtn.Font = Enum.Font.GothamBold
     toggleMenuBtn.BorderSizePixel = 0
     toggleMenuBtn.Parent = screenGui
     
     local toggleMenuCorner = Instance.new("UICorner")
-    toggleMenuCorner.CornerRadius = UDim.new(0, 10)
+    toggleMenuCorner.CornerRadius = UDim.new(0, 8)
     toggleMenuCorner.Parent = toggleMenuBtn
     
-    -- Main Frame
+    -- Main Frame (Pulsar X size: ~440x620)
     local frame = Instance.new("Frame")
     frame.Name = "MainFrame"
-    frame.Size = UDim2.new(0, 380, 0, 480)
-    frame.Position = UDim2.new(0.5, -190, 0.5, -240)
-    frame.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
+    frame.Size = UDim2.new(0, 440, 0, 620)
+    frame.Position = UDim2.new(0.5, -220, 0.5, -310)
+    frame.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
     frame.BorderSizePixel = 0
     frame.Active = true
     frame.Draggable = true
     frame.Parent = screenGui
     
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 10)
+    corner.CornerRadius = UDim.new(0, 12)
     corner.Parent = frame
+    
+    local shadow = Instance.new("ImageLabel")
+    shadow.Name = "Shadow"
+    shadow.Size = UDim2.new(1, 30, 1, 30)
+    shadow.Position = UDim2.new(0, -15, 0, -15)
+    shadow.BackgroundTransparency = 1
+    shadow.Image = "rbxasset://textures/ui/GuiImagePlaceholder.png"
+    shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+    shadow.ImageTransparency = 0.7
+    shadow.ScaleType = Enum.ScaleType.Slice
+    shadow.SliceCenter = Rect.new(10, 10, 118, 118)
+    shadow.ZIndex = 0
+    shadow.Parent = frame
     
     -- Header
     local header = Instance.new("Frame")
     header.Name = "Header"
-    header.Size = UDim2.new(1, 0, 0, 40)
-    header.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+    header.Size = UDim2.new(1, 0, 0, 50)
+    header.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
     header.BorderSizePixel = 0
     header.Parent = frame
     
     local headerCorner = Instance.new("UICorner")
-    headerCorner.CornerRadius = UDim.new(0, 10)
+    headerCorner.CornerRadius = UDim.new(0, 12)
     headerCorner.Parent = header
     
     local headerBottom = Instance.new("Frame")
-    headerBottom.Size = UDim2.new(1, 0, 0, 10)
-    headerBottom.Position = UDim2.new(0, 0, 1, -10)
-    headerBottom.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+    headerBottom.Size = UDim2.new(1, 0, 0, 12)
+    headerBottom.Position = UDim2.new(0, 0, 1, -12)
+    headerBottom.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
     headerBottom.BorderSizePixel = 0
     headerBottom.Parent = header
     
     local title = Instance.new("TextLabel")
-    title.Size = UDim2.new(0, 180, 1, 0)
-    title.Position = UDim2.new(0, 12, 0, 0)
+    title.Size = UDim2.new(0, 200, 1, 0)
+    title.Position = UDim2.new(0, 18, 0, 0)
     title.BackgroundTransparency = 1
-    title.Text = "🛒 Auto Buy"
+    title.Text = "Pulsar X | Steal A Brainrot"
     title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    title.TextSize = 16
+    title.TextSize = 15
     title.Font = Enum.Font.GothamBold
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.Parent = header
     
+    local subtitle = Instance.new("TextLabel")
+    subtitle.Size = UDim2.new(0, 200, 0, 15)
+    subtitle.Position = UDim2.new(0, 18, 0, 28)
+    subtitle.BackgroundTransparency = 1
+    subtitle.Text = "Purchase Brainrot Section"
+    subtitle.TextColor3 = Color3.fromRGB(150, 150, 160)
+    subtitle.TextSize = 11
+    subtitle.Font = Enum.Font.Gotham
+    subtitle.TextXAlignment = Enum.TextXAlignment.Left
+    subtitle.Parent = header
+    
     local closeBtn = Instance.new("TextButton")
-    closeBtn.Size = UDim2.new(0, 30, 0, 30)
-    closeBtn.Position = UDim2.new(1, -35, 0, 5)
+    closeBtn.Size = UDim2.new(0, 35, 0, 35)
+    closeBtn.Position = UDim2.new(1, -45, 0, 7)
     closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
     closeBtn.Text = "X"
     closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -404,100 +428,139 @@ local function createGUI()
     closeBtn.Parent = header
     
     local closeCorner = Instance.new("UICorner")
-    closeCorner.CornerRadius = UDim.new(0, 6)
+    closeCorner.CornerRadius = UDim.new(0, 8)
     closeCorner.Parent = closeBtn
     
     closeBtn.MouseButton1Click:Connect(function()
         screenGui:Destroy()
     end)
     
-    -- Auto Buy Toggle
-    local autoToggle = Instance.new("TextButton")
-    autoToggle.Name = "AutoToggle"
-    autoToggle.Size = UDim2.new(0, 85, 0, 30)
-    autoToggle.Position = UDim2.new(1, -125, 0, 5)
-    autoToggle.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
-    autoToggle.Text = "OFF"
-    autoToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
-    autoToggle.TextSize = 14
-    autoToggle.Font = Enum.Font.GothamBold
-    autoToggle.BorderSizePixel = 0
-    autoToggle.Parent = header
+    -- Content Area
+    local content = Instance.new("Frame")
+    content.Name = "Content"
+    content.Size = UDim2.new(1, -32, 1, -100)
+    content.Position = UDim2.new(0, 16, 0, 60)
+    content.BackgroundTransparency = 1
+    content.Parent = frame
     
-    local autoToggleCorner = Instance.new("UICorner")
-    autoToggleCorner.CornerRadius = UDim.new(0, 6)
-    autoToggleCorner.Parent = autoToggle
-    
-    -- Select Section (Compact)
-    local selectFrame = Instance.new("Frame")
-    selectFrame.Size = UDim2.new(1, -24, 0, 45)
-    selectFrame.Position = UDim2.new(0, 12, 0, 50)
-    selectFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
-    selectFrame.BorderSizePixel = 0
-    selectFrame.Parent = frame
+    -- Select Brainrots Section
+    local selectSection = Instance.new("Frame")
+    selectSection.Size = UDim2.new(1, 0, 0, 85)
+    selectSection.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+    selectSection.BorderSizePixel = 0
+    selectSection.Parent = content
     
     local selectCorner = Instance.new("UICorner")
-    selectCorner.CornerRadius = UDim.new(0, 8)
-    selectCorner.Parent = selectFrame
+    selectCorner.CornerRadius = UDim.new(0, 10)
+    selectCorner.Parent = selectSection
     
-    local selectLabel = Instance.new("TextLabel")
-    selectLabel.Size = UDim2.new(1, -100, 0, 18)
-    selectLabel.Position = UDim2.new(0, 10, 0, 5)
-    selectLabel.BackgroundTransparency = 1
-    selectLabel.Text = "Select Brainrots"
-    selectLabel.TextColor3 = Color3.fromRGB(180, 180, 190)
-    selectLabel.TextSize = 12
-    selectLabel.Font = Enum.Font.Gotham
-    selectLabel.TextXAlignment = Enum.TextXAlignment.Left
-    selectLabel.Parent = selectFrame
+    local selectTitle = Instance.new("TextLabel")
+    selectTitle.Size = UDim2.new(1, -20, 0, 20)
+    selectTitle.Position = UDim2.new(0, 12, 0, 8)
+    selectTitle.BackgroundTransparency = 1
+    selectTitle.Text = "Select Brainrots"
+    selectTitle.TextColor3 = Color3.fromRGB(180, 180, 190)
+    selectTitle.TextSize = 11
+    selectTitle.Font = Enum.Font.Gotham
+    selectTitle.TextXAlignment = Enum.TextXAlignment.Left
+    selectTitle.Parent = selectSection
     
     local selectedDisplay = Instance.new("TextLabel")
     selectedDisplay.Name = "SelectedDisplay"
-    selectedDisplay.Size = UDim2.new(1, -20, 0, 20)
-    selectedDisplay.Position = UDim2.new(0, 10, 0, 23)
+    selectedDisplay.Size = UDim2.new(1, -24, 0, 35)
+    selectedDisplay.Position = UDim2.new(0, 12, 0, 30)
     selectedDisplay.BackgroundTransparency = 1
-    selectedDisplay.Text = "Noobini Pizzanini, Secret Lucky Bl..."
-    selectedDisplay.TextColor3 = Color3.fromRGB(100, 200, 255)
+    selectedDisplay.Text = "Noobini Pizzanini, Secret Lucky Block..."
+    selectedDisplay.TextColor3 = Color3.fromRGB(100, 180, 255)
     selectedDisplay.TextSize = 11
     selectedDisplay.Font = Enum.Font.Gotham
     selectedDisplay.TextXAlignment = Enum.TextXAlignment.Left
-    selectedDisplay.TextTruncate = Enum.TextTruncate.AtEnd
-    selectedDisplay.Parent = selectFrame
+    selectedDisplay.TextYAlignment = Enum.TextYAlignment.Top
+    selectedDisplay.TextWrapped = true
+    selectedDisplay.Parent = selectSection
     
     local editBtn = Instance.new("TextButton")
     editBtn.Name = "EditBtn"
-    editBtn.Size = UDim2.new(0, 50, 0, 25)
-    editBtn.Position = UDim2.new(1, -60, 0, 10)
-    editBtn.BackgroundColor3 = Color3.fromRGB(50, 120, 200)
+    editBtn.Size = UDim2.new(0, 60, 0, 28)
+    editBtn.Position = UDim2.new(1, -72, 1, -36)
+    editBtn.BackgroundColor3 = Color3.fromRGB(45, 110, 200)
     editBtn.Text = "Edit"
     editBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     editBtn.TextSize = 12
     editBtn.Font = Enum.Font.GothamBold
     editBtn.BorderSizePixel = 0
-    editBtn.Parent = selectFrame
+    editBtn.Parent = selectSection
     
     local editCorner = Instance.new("UICorner")
-    editCorner.CornerRadius = UDim.new(0, 6)
+    editCorner.CornerRadius = UDim.new(0, 7)
     editCorner.Parent = editBtn
     
-    -- Search Box
+    -- Auto Purchase Toggle
+    local autoSection = Instance.new("Frame")
+    autoSection.Size = UDim2.new(1, 0, 0, 50)
+    autoSection.Position = UDim2.new(0, 0, 0, 95)
+    autoSection.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+    autoSection.BorderSizePixel = 0
+    autoSection.Parent = content
+    
+    local autoCorner = Instance.new("UICorner")
+    autoCorner.CornerRadius = UDim.new(0, 10)
+    autoCorner.Parent = autoSection
+    
+    local autoLabel = Instance.new("TextLabel")
+    autoLabel.Size = UDim2.new(0, 200, 1, 0)
+    autoLabel.Position = UDim2.new(0, 12, 0, 0)
+    autoLabel.BackgroundTransparency = 1
+    autoLabel.Text = "Auto Purchase Brainrots"
+    autoLabel.TextColor3 = Color3.fromRGB(200, 200, 210)
+    autoLabel.TextSize = 13
+    autoLabel.Font = Enum.Font.GothamBold
+    autoLabel.TextXAlignment = Enum.TextXAlignment.Left
+    autoLabel.Parent = autoSection
+    
+    local autoToggle = Instance.new("TextButton")
+    autoToggle.Name = "AutoToggle"
+    autoToggle.Size = UDim2.new(0, 50, 0, 24)
+    autoToggle.Position = UDim2.new(1, -62, 0.5, -12)
+    autoToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 75)
+    autoToggle.Text = ""
+    autoToggle.BorderSizePixel = 0
+    autoToggle.Parent = autoSection
+    
+    local toggleCorner = Instance.new("UICorner")
+    toggleCorner.CornerRadius = UDim.new(1, 0)
+    toggleCorner.Parent = autoToggle
+    
+    local toggleCircle = Instance.new("Frame")
+    toggleCircle.Name = "Circle"
+    toggleCircle.Size = UDim2.new(0, 18, 0, 18)
+    toggleCircle.Position = UDim2.new(0, 3, 0.5, -9)
+    toggleCircle.BackgroundColor3 = Color3.fromRGB(200, 200, 210)
+    toggleCircle.BorderSizePixel = 0
+    toggleCircle.Parent = autoToggle
+    
+    local circleCorner = Instance.new("UICorner")
+    circleCorner.CornerRadius = UDim.new(1, 0)
+    circleCorner.Parent = toggleCircle
+    
+    -- Search Frame
     local searchFrame = Instance.new("Frame")
     searchFrame.Name = "SearchFrame"
-    searchFrame.Size = UDim2.new(1, -24, 0, 35)
-    searchFrame.Position = UDim2.new(0, 12, 0, 105)
-    searchFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+    searchFrame.Size = UDim2.new(1, 0, 0, 40)
+    searchFrame.Position = UDim2.new(0, 0, 0, 155)
+    searchFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
     searchFrame.BorderSizePixel = 0
     searchFrame.Visible = false
-    searchFrame.Parent = frame
+    searchFrame.Parent = content
     
     local searchCorner = Instance.new("UICorner")
-    searchCorner.CornerRadius = UDim.new(0, 8)
+    searchCorner.CornerRadius = UDim.new(0, 10)
     searchCorner.Parent = searchFrame
     
     local searchBox = Instance.new("TextBox")
     searchBox.Name = "SearchBox"
-    searchBox.Size = UDim2.new(1, -16, 1, 0)
-    searchBox.Position = UDim2.new(0, 8, 0, 0)
+    searchBox.Size = UDim2.new(1, -24, 1, 0)
+    searchBox.Position = UDim2.new(0, 12, 0, 0)
     searchBox.BackgroundTransparency = 1
     searchBox.PlaceholderText = "🔍 Search brainrot..."
     searchBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 140)
@@ -512,58 +575,66 @@ local function createGUI()
     -- Scroll Frame
     local scrollFrame = Instance.new("ScrollingFrame")
     scrollFrame.Name = "ScrollFrame"
-    scrollFrame.Size = UDim2.new(1, -24, 1, -210)
-    scrollFrame.Position = UDim2.new(0, 12, 0, 150)
-    scrollFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+    scrollFrame.Size = UDim2.new(1, 0, 1, -205)
+    scrollFrame.Position = UDim2.new(0, 0, 0, 205)
+    scrollFrame.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
     scrollFrame.BorderSizePixel = 0
     scrollFrame.ScrollBarThickness = 4
     scrollFrame.ScrollBarImageColor3 = Color3.fromRGB(60, 60, 80)
     scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
     scrollFrame.Visible = false
-    scrollFrame.Parent = frame
+    scrollFrame.Parent = content
     
     local scrollCorner = Instance.new("UICorner")
-    scrollCorner.CornerRadius = UDim.new(0, 8)
+    scrollCorner.CornerRadius = UDim.new(0, 10)
     scrollCorner.Parent = scrollFrame
     
     local listLayout = Instance.new("UIListLayout")
     listLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    listLayout.Padding = UDim.new(0, 3)
+    listLayout.Padding = UDim.new(0, 4)
     listLayout.Parent = scrollFrame
     
     local padding = Instance.new("UIPadding")
-    padding.PaddingTop = UDim.new(0, 5)
-    padding.PaddingBottom = UDim.new(0, 5)
-    padding.PaddingLeft = UDim.new(0, 5)
-    padding.PaddingRight = UDim.new(0, 5)
+    padding.PaddingTop = UDim.new(0, 8)
+    padding.PaddingBottom = UDim.new(0, 8)
+    padding.PaddingLeft = UDim.new(0, 8)
+    padding.PaddingRight = UDim.new(0, 8)
     padding.Parent = scrollFrame
     
-    -- Status Label
+    -- Status Bar
+    local statusBar = Instance.new("Frame")
+    statusBar.Name = "StatusBar"
+    statusBar.Size = UDim2.new(1, 0, 0, 40)
+    statusBar.Position = UDim2.new(0, 0, 1, -50)
+    statusBar.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+    statusBar.BorderSizePixel = 0
+    statusBar.Parent = content
+    
+    local statusCorner = Instance.new("UICorner")
+    statusCorner.CornerRadius = UDim.new(0, 10)
+    statusCorner.Parent = statusBar
+    
     local statusLabel = Instance.new("TextLabel")
     statusLabel.Name = "StatusLabel"
-    statusLabel.Size = UDim2.new(1, -24, 0, 30)
-    statusLabel.Position = UDim2.new(0, 12, 1, -40)
-    statusLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+    statusLabel.Size = UDim2.new(1, -24, 1, 0)
+    statusLabel.Position = UDim2.new(0, 12, 0, 0)
+    statusLabel.BackgroundTransparency = 1
     statusLabel.Text = "Status: Idle"
     statusLabel.TextColor3 = Color3.fromRGB(180, 180, 200)
     statusLabel.TextSize = 12
     statusLabel.Font = Enum.Font.Gotham
-    statusLabel.BorderSizePixel = 0
-    statusLabel.Parent = frame
-    
-    local statusCorner = Instance.new("UICorner")
-    statusCorner.CornerRadius = UDim.new(0, 8)
-    statusCorner.Parent = statusLabel
+    statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+    statusLabel.Parent = statusBar
     
     screenGui.Parent = player:WaitForChild("PlayerGui")
-    return screenGui, frame, autoToggle, searchBox, scrollFrame, statusLabel, selectedDisplay, searchFrame, editBtn, toggleMenuBtn
+    return screenGui, frame, autoToggle, toggleCircle, searchBox, scrollFrame, statusLabel, selectedDisplay, searchFrame, editBtn, toggleMenuBtn
 end
 
 local function createItemButton(itemName, parent, index)
     local btn = Instance.new("TextButton")
     btn.Name = itemName
-    btn.Size = UDim2.new(1, -10, 0, 28)
-    btn.BackgroundColor3 = Color3.fromRGB(35, 35, 48)
+    btn.Size = UDim2.new(1, -16, 0, 32)
+    btn.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
     btn.Text = ""
     btn.BorderSizePixel = 0
     btn.LayoutOrder = index
@@ -571,19 +642,19 @@ local function createItemButton(itemName, parent, index)
     btn.Parent = parent
     
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 5)
+    corner.CornerRadius = UDim.new(0, 6)
     corner.Parent = btn
     
     local checkbox = Instance.new("Frame")
     checkbox.Name = "Checkbox"
-    checkbox.Size = UDim2.new(0, 18, 0, 18)
-    checkbox.Position = UDim2.new(0, 5, 0.5, -9)
-    checkbox.BackgroundColor3 = Color3.fromRGB(45, 45, 60)
+    checkbox.Size = UDim2.new(0, 20, 0, 20)
+    checkbox.Position = UDim2.new(0, 8, 0.5, -10)
+    checkbox.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
     checkbox.BorderSizePixel = 0
     checkbox.Parent = btn
     
     local checkCorner = Instance.new("UICorner")
-    checkCorner.CornerRadius = UDim.new(0, 3)
+    checkCorner.CornerRadius = UDim.new(0, 4)
     checkCorner.Parent = checkbox
     
     local checkmark = Instance.new("TextLabel")
@@ -592,19 +663,19 @@ local function createItemButton(itemName, parent, index)
     checkmark.BackgroundTransparency = 1
     checkmark.Text = "✓"
     checkmark.TextColor3 = Color3.fromRGB(100, 255, 120)
-    checkmark.TextSize = 14
+    checkmark.TextSize = 15
     checkmark.Font = Enum.Font.GothamBold
     checkmark.Visible = false
     checkmark.Parent = checkbox
     
     local label = Instance.new("TextLabel")
     label.Name = "Label"
-    label.Size = UDim2.new(1, -32, 1, 0)
-    label.Position = UDim2.new(0, 28, 0, 0)
+    label.Size = UDim2.new(1, -40, 1, 0)
+    label.Position = UDim2.new(0, 35, 0, 0)
     label.BackgroundTransparency = 1
     label.Text = itemName
     label.TextColor3 = Color3.fromRGB(210, 210, 220)
-    label.TextSize = 11
+    label.TextSize = 12
     label.Font = Enum.Font.Gotham
     label.TextXAlignment = Enum.TextXAlignment.Left
     label.TextTruncate = Enum.TextTruncate.AtEnd
@@ -616,15 +687,16 @@ end
 local function updateSelectedDisplay(display)
     local selected = {}
     for item in pairs(config.selectedItems) do
-        table.insert(selected, item:match("^(.-)%s%$") or item:sub(1, 15))
+        local shortName = item:match("^(.-)%s%$") or item:sub(1, 18)
+        table.insert(selected, shortName)
     end
     
     if #selected == 0 then
         display.Text = "No items selected"
-        display.TextColor3 = Color3.fromRGB(150, 150, 160)
+        display.TextColor3 = Color3.fromRGB(120, 120, 130)
     else
         display.Text = table.concat(selected, ", ")
-        display.TextColor3 = Color3.fromRGB(100, 200, 255)
+        display.TextColor3 = Color3.fromRGB(100, 180, 255)
     end
 end
 
@@ -649,30 +721,30 @@ local function populateItems(scrollFrame, searchText, display)
         
         if config.selectedItems[item] then
             checkmark.Visible = true
-            btn.BackgroundColor3 = Color3.fromRGB(50, 70, 90)
+            btn.BackgroundColor3 = Color3.fromRGB(45, 65, 90)
         end
         
         btn.MouseButton1Click:Connect(function()
             config.selectedItems[item] = not config.selectedItems[item]
             checkmark.Visible = config.selectedItems[item]
-            btn.BackgroundColor3 = config.selectedItems[item] and Color3.fromRGB(50, 70, 90) or Color3.fromRGB(35, 35, 48)
+            btn.BackgroundColor3 = config.selectedItems[item] and Color3.fromRGB(45, 65, 90) or Color3.fromRGB(30, 30, 40)
             updateSelectedDisplay(display)
         end)
         
         btn.MouseEnter:Connect(function()
             if not config.selectedItems[item] then
-                btn.BackgroundColor3 = Color3.fromRGB(45, 45, 60)
+                btn.BackgroundColor3 = Color3.fromRGB(38, 38, 50)
             end
         end)
         
         btn.MouseLeave:Connect(function()
             if not config.selectedItems[item] then
-                btn.BackgroundColor3 = Color3.fromRGB(35, 35, 48)
+                btn.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
             end
         end)
     end
     
-    scrollFrame.CanvasSize = UDim2.new(0, 0, 0, #filteredItems * 31 + 10)
+    scrollFrame.CanvasSize = UDim2.new(0, 0, 0, #filteredItems * 36 + 16)
 end
 
 local function matchesTarget(text)
@@ -727,18 +799,17 @@ local function quickPurchase(prompt)
 end
 
 -- Initialize
-local screenGui, frame, autoToggle, searchBox, scrollFrame, statusLabel, selectedDisplay, searchFrame, editBtn, toggleMenuBtn = createGUI()
+local screenGui, frame, autoToggle, toggleCircle, searchBox, scrollFrame, statusLabel, selectedDisplay, searchFrame, editBtn, toggleMenuBtn = createGUI()
 gui = screenGui
 mainFrame = frame
 populateItems(scrollFrame, "", selectedDisplay)
 updateSelectedDisplay(selectedDisplay)
 
--- Toggle Menu Button
+-- Toggle Menu
 toggleMenuBtn.MouseButton1Click:Connect(function()
     menuVisible = not menuVisible
     mainFrame.Visible = menuVisible
-    toggleMenuBtn.Text = menuVisible and "☰" or "☰"
-    toggleMenuBtn.BackgroundColor3 = menuVisible and Color3.fromRGB(40, 40, 55) or Color3.fromRGB(80, 80, 100)
+    toggleMenuBtn.BackgroundColor3 = menuVisible and Color3.fromRGB(35, 35, 45) or Color3.fromRGB(60, 60, 75)
 end)
 
 -- Edit Button
@@ -747,14 +818,19 @@ editBtn.MouseButton1Click:Connect(function()
     scrollFrame.Visible = not isEditing
     searchFrame.Visible = not isEditing
     editBtn.Text = isEditing and "Edit" or "Done"
-    editBtn.BackgroundColor3 = isEditing and Color3.fromRGB(50, 120, 200) or Color3.fromRGB(50, 180, 100)
+    editBtn.BackgroundColor3 = isEditing and Color3.fromRGB(45, 110, 200) or Color3.fromRGB(50, 180, 100)
 end)
 
--- Auto Toggle
+-- Auto Toggle (iOS style)
 autoToggle.MouseButton1Click:Connect(function()
     config.autoEnabled = not config.autoEnabled
-    autoToggle.Text = config.autoEnabled and "ON" or "OFF"
-    autoToggle.BackgroundColor3 = config.autoEnabled and Color3.fromRGB(50, 200, 80) or Color3.fromRGB(200, 50, 50)
+    
+    local targetPos = config.autoEnabled and UDim2.new(1, -21, 0.5, -9) or UDim2.new(0, 3, 0.5, -9)
+    local targetColor = config.autoEnabled and Color3.fromRGB(50, 200, 80) or Color3.fromRGB(60, 60, 75)
+    
+    game:GetService("TweenService"):Create(toggleCircle, TweenInfo.new(0.2), {Position = targetPos}):Play()
+    game:GetService("TweenService"):Create(autoToggle, TweenInfo.new(0.2), {BackgroundColor3 = targetColor}):Play()
+    
     statusLabel.Text = "Status: "..(config.autoEnabled and "🟢 Active" or "⚫ Idle")
 end)
 
@@ -780,7 +856,7 @@ player.CharacterAdded:Connect(function(newChar)
     humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 end)
 
-print("══════════════════════════════")
-print("✓ Auto Buy Menu Loaded")
+print("═══════════════════════════════════")
+print("✓ Pulsar X Auto Buy Loaded")
 print("✓ Click ☰ to toggle menu")
-print("══════════════════════════════")
+print("═══════════════════════════════════")
