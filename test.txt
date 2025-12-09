@@ -1,0 +1,517 @@
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+-- Config
+local config = {
+    purchaseRange = 20,
+    autoEnabled = false,
+    scanInterval = 0.1,
+    selectedItems = {}
+}
+
+local allItems = {
+    "Noobini Pizzanini $25", "Lirilì Larilà $250", "Tim Cheese $500", "Fluriflura $750", "Talpa Di Fero $1k",
+    "Svinina Bombardino $1.25k", "Raccooni Jandelini $1.35k", "Pipi Kiwi $1.5k", "Pipi Corni $1.75k",
+    "Tartaragno $1.5k", "Noobini Santanini $1.3k", "Trippi Troppi $2k", "Gangster Footera $4k",
+    "Boneca Ambalabu $5k", "Ta Ta Ta Ta Sahur $7.5k", "Tric Trac Baraboom $9k", "Bandito Bobritto $4.5k",
+    "Cacto Hipopotamo $6.5k", "Pipi Avocado $9.5k", "Pinealotto Fruttarino $9.75k", "Cupcake Koala $8k",
+    "Frogo Elfo $9.25k", "Cappuccino Assassino $10k", "Brr Brr Patapim $15k", "Trulimero Trulicina $20k",
+    "Bananita Dolphinita $25k", "Brri Brri Bicus Dicus Bombicus $30k", "Bambini Crostini $22.5k",
+    "Perochello Lemonchello $27.5k", "Avocadini Guffo $35k", "Salamino Penguino $40k", "Ti Ti Ti Sahur $37.5k",
+    "Penguino Cocosino $45k", "Avocadini Antilopini $17.5k", "Bandito Axolito $12.5k", "Malame Amarele $23.5k",
+    "Mangolini Parrocini $38.5k", "Mummio Rappitto $47.5k", "Frogato Pirato $39k", "Wombo Rollo $42.5k",
+    "Doi Doi Do $41k", "Penguin Tree $42k", "Burbaloni Loliloli $35k", "Chimpanzini Bananini $50k",
+    "Ballerina Cappuccina $100k", "Chef Crabracadabra $150k", "Glorbo Fruttodrillo $200k",
+    "Blueberrinni Octopusini $250k", "Lionel Cactuseli $175k", "Pandaccini Bananini $300k",
+    "Strawberrelli Flamingelli $275k", "Cocosini Mama $285k", "Pi Pi Watermelon $315k", "Sigma Boy $325k",
+    "Pipi Potato $265k", "Quivioli Ameleonni $225k", "Tirilikalika Tirilikalako $75k", "Caramello Filtrello $255k",
+    "Signore Carapace $320k", "Sigma Girl $340k", "Quackula $310k", "Buho de Fuego $345k", "Clickerino Crabo $250k",
+    "Puffaball $330k", "Chocco Bunny $327.5k", "Sealo Regalo $342.5k", "Frigo Camelo $350k",
+    "Orangutini Ananassini $400k", "Bombardiro Crocodilo $500k", "Bombombini Gusini $1M", "Rhino Toasterino $450k",
+    "Cavallo Virtuoso $2.5M", "Spioniro Golubiro $750k", "Zibra Zubra Zibralini $1.5M", "Tigrilini Watermelini $1.75M",
+    "Gorillo Watermelondrillo $3M", "Avocadorilla $2M", "Ganganzelli Trulala $3.75M", "Tob Tobi Tobi $3.25M",
+    "Te Te Te Sahur $4M", "Tracoducotulu Delapeladustuz $4.25M", "Lerulerulerule $3.5M", "Carloo $4.5M",
+    "Carrotini Brainini $4.75M", "Brutto Gialutto $600k", "Gorillo Subwoofero $2.75M", "Los Noobinis $4.35M",
+    "Rhino Helicopterino $4.1M", "Elefanto Frigo $4.6M", "Toiletto Focaccino $4.85M", "Cachorrito Melonito $4.4M",
+    "Bananito Bandito $4.9M", "Magi Ribbitini $4.2M", "Jacko Spaventosa $4.875M", "Stoppo Luminino $3M",
+    "Centrucci Nuclucci $4.8M", "Jingle Jingle Sahur $4.3M", "Tree Tree Tree Sahur $4.95M",
+    "Chihuanini Taconini $8.5M", "Cocofanto Elefanto $5M", "Tralalero Tralala $10M", "Odin Din Din Dun $15M",
+    "Girafa Celestre $7.5M", "Trenostruzzo Turbo 3000 $25M", "Matteo $10M", "Tigroligre Frutonni $14M",
+    "Orcalero Orcala $25M", "Unclito Samito $20M", "Gattatino Nyanino $7.5M", "Espresso Signora $25M",
+    "Ballerino Lololo $35M", "Piccione Macchina $40M", "Los Crocodillitos $12.5M", "Tukanno Bananno $22.5M",
+    "Trippi Troppi Troppa Trippa $30M", "Los Tungtungtungcitos $37.5M", "Agarrini la Palini $80M",
+    "Bulbito Bandito Traktorito $35M", "Los Orcalitos $45M", "Tipi Topi Taco $20M", "Bombardini Tortinii $50M",
+    "Brainrot God Lucky Block $25M", "Secret Lucky Block $750M", "Admin Lucky Block $100M"
+}
+
+local boughtPrompts = {}
+local gui = nil
+local mainFrame = nil
+local menuVisible = true
+
+-- Create GUI
+local function createGUI()
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "AutoBuyMenu"
+    screenGui.ResetOnSpawn = false
+    screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    
+    -- Toggle Button (Always Visible)
+    local toggleMenuBtn = Instance.new("TextButton")
+    toggleMenuBtn.Name = "ToggleMenuBtn"
+    toggleMenuBtn.Size = UDim2.new(0, 50, 0, 50)
+    toggleMenuBtn.Position = UDim2.new(0, 10, 0.5, -25)
+    toggleMenuBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
+    toggleMenuBtn.Text = "☰"
+    toggleMenuBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    toggleMenuBtn.TextSize = 24
+    toggleMenuBtn.Font = Enum.Font.GothamBold
+    toggleMenuBtn.BorderSizePixel = 0
+    toggleMenuBtn.Parent = screenGui
+    
+    local toggleMenuCorner = Instance.new("UICorner")
+    toggleMenuCorner.CornerRadius = UDim.new(0, 10)
+    toggleMenuCorner.Parent = toggleMenuBtn
+    
+    -- Main Frame
+    local frame = Instance.new("Frame")
+    frame.Name = "MainFrame"
+    frame.Size = UDim2.new(0, 380, 0, 480)
+    frame.Position = UDim2.new(0.5, -190, 0.5, -240)
+    frame.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
+    frame.BorderSizePixel = 0
+    frame.Active = true
+    frame.Draggable = true
+    frame.Parent = screenGui
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 10)
+    corner.Parent = frame
+    
+    -- Header
+    local header = Instance.new("Frame")
+    header.Name = "Header"
+    header.Size = UDim2.new(1, 0, 0, 40)
+    header.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+    header.BorderSizePixel = 0
+    header.Parent = frame
+    
+    local headerCorner = Instance.new("UICorner")
+    headerCorner.CornerRadius = UDim.new(0, 10)
+    headerCorner.Parent = header
+    
+    local headerBottom = Instance.new("Frame")
+    headerBottom.Size = UDim2.new(1, 0, 0, 10)
+    headerBottom.Position = UDim2.new(0, 0, 1, -10)
+    headerBottom.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+    headerBottom.BorderSizePixel = 0
+    headerBottom.Parent = header
+    
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(0, 180, 1, 0)
+    title.Position = UDim2.new(0, 12, 0, 0)
+    title.BackgroundTransparency = 1
+    title.Text = "🛒 Auto Buy"
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.TextSize = 16
+    title.Font = Enum.Font.GothamBold
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.Parent = header
+    
+    local closeBtn = Instance.new("TextButton")
+    closeBtn.Size = UDim2.new(0, 30, 0, 30)
+    closeBtn.Position = UDim2.new(1, -35, 0, 5)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+    closeBtn.Text = "X"
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeBtn.TextSize = 16
+    closeBtn.Font = Enum.Font.GothamBold
+    closeBtn.BorderSizePixel = 0
+    closeBtn.Parent = header
+    
+    local closeCorner = Instance.new("UICorner")
+    closeCorner.CornerRadius = UDim.new(0, 6)
+    closeCorner.Parent = closeBtn
+    
+    closeBtn.MouseButton1Click:Connect(function()
+        screenGui:Destroy()
+    end)
+    
+    -- Auto Buy Toggle
+    local autoToggle = Instance.new("TextButton")
+    autoToggle.Name = "AutoToggle"
+    autoToggle.Size = UDim2.new(0, 85, 0, 30)
+    autoToggle.Position = UDim2.new(1, -125, 0, 5)
+    autoToggle.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+    autoToggle.Text = "OFF"
+    autoToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    autoToggle.TextSize = 14
+    autoToggle.Font = Enum.Font.GothamBold
+    autoToggle.BorderSizePixel = 0
+    autoToggle.Parent = header
+    
+    local autoToggleCorner = Instance.new("UICorner")
+    autoToggleCorner.CornerRadius = UDim.new(0, 6)
+    autoToggleCorner.Parent = autoToggle
+    
+    -- Select Section (Compact)
+    local selectFrame = Instance.new("Frame")
+    selectFrame.Size = UDim2.new(1, -24, 0, 45)
+    selectFrame.Position = UDim2.new(0, 12, 0, 50)
+    selectFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+    selectFrame.BorderSizePixel = 0
+    selectFrame.Parent = frame
+    
+    local selectCorner = Instance.new("UICorner")
+    selectCorner.CornerRadius = UDim.new(0, 8)
+    selectCorner.Parent = selectFrame
+    
+    local selectLabel = Instance.new("TextLabel")
+    selectLabel.Size = UDim2.new(1, -100, 0, 18)
+    selectLabel.Position = UDim2.new(0, 10, 0, 5)
+    selectLabel.BackgroundTransparency = 1
+    selectLabel.Text = "Select Brainrots"
+    selectLabel.TextColor3 = Color3.fromRGB(180, 180, 190)
+    selectLabel.TextSize = 12
+    selectLabel.Font = Enum.Font.Gotham
+    selectLabel.TextXAlignment = Enum.TextXAlignment.Left
+    selectLabel.Parent = selectFrame
+    
+    local selectedDisplay = Instance.new("TextLabel")
+    selectedDisplay.Name = "SelectedDisplay"
+    selectedDisplay.Size = UDim2.new(1, -20, 0, 20)
+    selectedDisplay.Position = UDim2.new(0, 10, 0, 23)
+    selectedDisplay.BackgroundTransparency = 1
+    selectedDisplay.Text = "Noobini Pizzanini, Secret Lucky Bl..."
+    selectedDisplay.TextColor3 = Color3.fromRGB(100, 200, 255)
+    selectedDisplay.TextSize = 11
+    selectedDisplay.Font = Enum.Font.Gotham
+    selectedDisplay.TextXAlignment = Enum.TextXAlignment.Left
+    selectedDisplay.TextTruncate = Enum.TextTruncate.AtEnd
+    selectedDisplay.Parent = selectFrame
+    
+    local editBtn = Instance.new("TextButton")
+    editBtn.Name = "EditBtn"
+    editBtn.Size = UDim2.new(0, 50, 0, 25)
+    editBtn.Position = UDim2.new(1, -60, 0, 10)
+    editBtn.BackgroundColor3 = Color3.fromRGB(50, 120, 200)
+    editBtn.Text = "Edit"
+    editBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    editBtn.TextSize = 12
+    editBtn.Font = Enum.Font.GothamBold
+    editBtn.BorderSizePixel = 0
+    editBtn.Parent = selectFrame
+    
+    local editCorner = Instance.new("UICorner")
+    editCorner.CornerRadius = UDim.new(0, 6)
+    editCorner.Parent = editBtn
+    
+    -- Search Box
+    local searchFrame = Instance.new("Frame")
+    searchFrame.Name = "SearchFrame"
+    searchFrame.Size = UDim2.new(1, -24, 0, 35)
+    searchFrame.Position = UDim2.new(0, 12, 0, 105)
+    searchFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+    searchFrame.BorderSizePixel = 0
+    searchFrame.Visible = false
+    searchFrame.Parent = frame
+    
+    local searchCorner = Instance.new("UICorner")
+    searchCorner.CornerRadius = UDim.new(0, 8)
+    searchCorner.Parent = searchFrame
+    
+    local searchBox = Instance.new("TextBox")
+    searchBox.Name = "SearchBox"
+    searchBox.Size = UDim2.new(1, -16, 1, 0)
+    searchBox.Position = UDim2.new(0, 8, 0, 0)
+    searchBox.BackgroundTransparency = 1
+    searchBox.PlaceholderText = "🔍 Search brainrot..."
+    searchBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 140)
+    searchBox.Text = ""
+    searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    searchBox.TextSize = 12
+    searchBox.Font = Enum.Font.Gotham
+    searchBox.TextXAlignment = Enum.TextXAlignment.Left
+    searchBox.ClearTextOnFocus = false
+    searchBox.Parent = searchFrame
+    
+    -- Scroll Frame
+    local scrollFrame = Instance.new("ScrollingFrame")
+    scrollFrame.Name = "ScrollFrame"
+    scrollFrame.Size = UDim2.new(1, -24, 1, -210)
+    scrollFrame.Position = UDim2.new(0, 12, 0, 150)
+    scrollFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+    scrollFrame.BorderSizePixel = 0
+    scrollFrame.ScrollBarThickness = 4
+    scrollFrame.ScrollBarImageColor3 = Color3.fromRGB(60, 60, 80)
+    scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+    scrollFrame.Visible = false
+    scrollFrame.Parent = frame
+    
+    local scrollCorner = Instance.new("UICorner")
+    scrollCorner.CornerRadius = UDim.new(0, 8)
+    scrollCorner.Parent = scrollFrame
+    
+    local listLayout = Instance.new("UIListLayout")
+    listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    listLayout.Padding = UDim.new(0, 3)
+    listLayout.Parent = scrollFrame
+    
+    local padding = Instance.new("UIPadding")
+    padding.PaddingTop = UDim.new(0, 5)
+    padding.PaddingBottom = UDim.new(0, 5)
+    padding.PaddingLeft = UDim.new(0, 5)
+    padding.PaddingRight = UDim.new(0, 5)
+    padding.Parent = scrollFrame
+    
+    -- Status Label
+    local statusLabel = Instance.new("TextLabel")
+    statusLabel.Name = "StatusLabel"
+    statusLabel.Size = UDim2.new(1, -24, 0, 30)
+    statusLabel.Position = UDim2.new(0, 12, 1, -40)
+    statusLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+    statusLabel.Text = "Status: Idle"
+    statusLabel.TextColor3 = Color3.fromRGB(180, 180, 200)
+    statusLabel.TextSize = 12
+    statusLabel.Font = Enum.Font.Gotham
+    statusLabel.BorderSizePixel = 0
+    statusLabel.Parent = frame
+    
+    local statusCorner = Instance.new("UICorner")
+    statusCorner.CornerRadius = UDim.new(0, 8)
+    statusCorner.Parent = statusLabel
+    
+    screenGui.Parent = player:WaitForChild("PlayerGui")
+    return screenGui, frame, autoToggle, searchBox, scrollFrame, statusLabel, selectedDisplay, searchFrame, editBtn, toggleMenuBtn
+end
+
+local function createItemButton(itemName, parent, index)
+    local btn = Instance.new("TextButton")
+    btn.Name = itemName
+    btn.Size = UDim2.new(1, -10, 0, 28)
+    btn.BackgroundColor3 = Color3.fromRGB(35, 35, 48)
+    btn.Text = ""
+    btn.BorderSizePixel = 0
+    btn.LayoutOrder = index
+    btn.AutoButtonColor = false
+    btn.Parent = parent
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 5)
+    corner.Parent = btn
+    
+    local checkbox = Instance.new("Frame")
+    checkbox.Name = "Checkbox"
+    checkbox.Size = UDim2.new(0, 18, 0, 18)
+    checkbox.Position = UDim2.new(0, 5, 0.5, -9)
+    checkbox.BackgroundColor3 = Color3.fromRGB(45, 45, 60)
+    checkbox.BorderSizePixel = 0
+    checkbox.Parent = btn
+    
+    local checkCorner = Instance.new("UICorner")
+    checkCorner.CornerRadius = UDim.new(0, 3)
+    checkCorner.Parent = checkbox
+    
+    local checkmark = Instance.new("TextLabel")
+    checkmark.Name = "Checkmark"
+    checkmark.Size = UDim2.new(1, 0, 1, 0)
+    checkmark.BackgroundTransparency = 1
+    checkmark.Text = "✓"
+    checkmark.TextColor3 = Color3.fromRGB(100, 255, 120)
+    checkmark.TextSize = 14
+    checkmark.Font = Enum.Font.GothamBold
+    checkmark.Visible = false
+    checkmark.Parent = checkbox
+    
+    local label = Instance.new("TextLabel")
+    label.Name = "Label"
+    label.Size = UDim2.new(1, -32, 1, 0)
+    label.Position = UDim2.new(0, 28, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Text = itemName
+    label.TextColor3 = Color3.fromRGB(210, 210, 220)
+    label.TextSize = 11
+    label.Font = Enum.Font.Gotham
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.TextTruncate = Enum.TextTruncate.AtEnd
+    label.Parent = btn
+    
+    return btn, checkmark
+end
+
+local function updateSelectedDisplay(display)
+    local selected = {}
+    for item in pairs(config.selectedItems) do
+        table.insert(selected, item:match("^(.-)%s%$") or item:sub(1, 15))
+    end
+    
+    if #selected == 0 then
+        display.Text = "No items selected"
+        display.TextColor3 = Color3.fromRGB(150, 150, 160)
+    else
+        display.Text = table.concat(selected, ", ")
+        display.TextColor3 = Color3.fromRGB(100, 200, 255)
+    end
+end
+
+local function populateItems(scrollFrame, searchText, display)
+    for _, child in ipairs(scrollFrame:GetChildren()) do
+        if child:IsA("TextButton") then
+            child:Destroy()
+        end
+    end
+    
+    local filteredItems = {}
+    searchText = searchText:lower()
+    
+    for _, item in ipairs(allItems) do
+        if searchText == "" or item:lower():find(searchText, 1, true) then
+            table.insert(filteredItems, item)
+        end
+    end
+    
+    for i, item in ipairs(filteredItems) do
+        local btn, checkmark = createItemButton(item, scrollFrame, i)
+        
+        if config.selectedItems[item] then
+            checkmark.Visible = true
+            btn.BackgroundColor3 = Color3.fromRGB(50, 70, 90)
+        end
+        
+        btn.MouseButton1Click:Connect(function()
+            config.selectedItems[item] = not config.selectedItems[item]
+            checkmark.Visible = config.selectedItems[item]
+            btn.BackgroundColor3 = config.selectedItems[item] and Color3.fromRGB(50, 70, 90) or Color3.fromRGB(35, 35, 48)
+            updateSelectedDisplay(display)
+        end)
+        
+        btn.MouseEnter:Connect(function()
+            if not config.selectedItems[item] then
+                btn.BackgroundColor3 = Color3.fromRGB(45, 45, 60)
+            end
+        end)
+        
+        btn.MouseLeave:Connect(function()
+            if not config.selectedItems[item] then
+                btn.BackgroundColor3 = Color3.fromRGB(35, 35, 48)
+            end
+        end)
+    end
+    
+    scrollFrame.CanvasSize = UDim2.new(0, 0, 0, #filteredItems * 31 + 10)
+end
+
+local function matchesTarget(text)
+    if not text then return false end
+    text = text:lower()
+    for item in pairs(config.selectedItems) do
+        if text:find(item:lower(), 1, true) then
+            return true
+        end
+    end
+    return false
+end
+
+local function getPromptPosition(prompt)
+    if prompt.Parent then
+        if prompt.Parent:IsA("BasePart") then
+            return prompt.Parent.Position
+        elseif prompt.Parent:IsA("Model") and prompt.Parent.PrimaryPart then
+            return prompt.Parent.PrimaryPart.Position
+        end
+    end
+end
+
+local function quickPurchase(prompt)
+    if not prompt or not prompt:IsA("ProximityPrompt") then return end
+    if not prompt.Enabled then return end
+    if boughtPrompts[prompt] then return end
+
+    local objectText = prompt.ObjectText or ""
+    if not matchesTarget(objectText) then return end
+
+    local pos = getPromptPosition(prompt)
+    if pos and (humanoidRootPart.Position - pos).Magnitude > config.purchaseRange then return end
+
+    boughtPrompts[prompt] = true
+    task.spawn(function()
+        pcall(function()
+            local originalHold = prompt.HoldDuration
+            prompt.HoldDuration = 0
+            prompt.MaxActivationDistance = 30
+
+            prompt:InputHoldBegin()
+            task.wait(0.05)
+            prompt:InputHoldEnd()
+
+            prompt.HoldDuration = originalHold
+            print("[✓] Bought: "..objectText)
+        end)
+        task.wait(0.3)
+        boughtPrompts[prompt] = nil
+    end)
+end
+
+-- Initialize
+local screenGui, frame, autoToggle, searchBox, scrollFrame, statusLabel, selectedDisplay, searchFrame, editBtn, toggleMenuBtn = createGUI()
+gui = screenGui
+mainFrame = frame
+populateItems(scrollFrame, "", selectedDisplay)
+updateSelectedDisplay(selectedDisplay)
+
+-- Toggle Menu Button
+toggleMenuBtn.MouseButton1Click:Connect(function()
+    menuVisible = not menuVisible
+    mainFrame.Visible = menuVisible
+    toggleMenuBtn.Text = menuVisible and "☰" or "☰"
+    toggleMenuBtn.BackgroundColor3 = menuVisible and Color3.fromRGB(40, 40, 55) or Color3.fromRGB(80, 80, 100)
+end)
+
+-- Edit Button
+editBtn.MouseButton1Click:Connect(function()
+    local isEditing = scrollFrame.Visible
+    scrollFrame.Visible = not isEditing
+    searchFrame.Visible = not isEditing
+    editBtn.Text = isEditing and "Edit" or "Done"
+    editBtn.BackgroundColor3 = isEditing and Color3.fromRGB(50, 120, 200) or Color3.fromRGB(50, 180, 100)
+end)
+
+-- Auto Toggle
+autoToggle.MouseButton1Click:Connect(function()
+    config.autoEnabled = not config.autoEnabled
+    autoToggle.Text = config.autoEnabled and "ON" or "OFF"
+    autoToggle.BackgroundColor3 = config.autoEnabled and Color3.fromRGB(50, 200, 80) or Color3.fromRGB(200, 50, 50)
+    statusLabel.Text = "Status: "..(config.autoEnabled and "🟢 Active" or "⚫ Idle")
+end)
+
+searchBox:GetPropertyChangedSignal("Text"):Connect(function()
+    populateItems(scrollFrame, searchBox.Text, selectedDisplay)
+end)
+
+task.spawn(function()
+    while true do
+        if config.autoEnabled then
+            for _, obj in ipairs(Workspace:GetDescendants()) do
+                if obj:IsA("ProximityPrompt") then
+                    quickPurchase(obj)
+                end
+            end
+        end
+        task.wait(config.scanInterval)
+    end
+end)
+
+player.CharacterAdded:Connect(function(newChar)
+    character = newChar
+    humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+end)
+
+print("══════════════════════════════")
+print("✓ Auto Buy Menu Loaded")
+print("✓ Click ☰ to toggle menu")
+print("══════════════════════════════")
