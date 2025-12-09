@@ -1,6 +1,6 @@
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
-local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
 
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
@@ -14,308 +14,9 @@ local config = {
     selectedItems = {}
 }
 
+-- Bạn điền items vào đây
 local allItems = {
-  "Noobini Pizzanini $25",
-"Lirilì Larilà $250",
-"Tim Cheese $500",
-"Fluriflura $750",
-"Talpa Di Fero $1k",
-"Svinina Bombardino $1.2k",
-"Noobini Santanini $1.3k",
-"Raccooni Jandelini $1.3k",
-"Pipi Kiwi $1.5k",
-"Tartaragno $1.5k",
-"Pipi Corni $1.7k",
-"Trippi Troppi $2k",
-"Gangster Footera $4k",
-"Bandito Bobritto $4.5k",
-"Boneca Ambalabu $5k",
-"Cacto Hipopotamo $6.5k",
-"Ta Ta Ta Ta Sahur $7.5k",
-"Cupcake Koala $8k",
-"Frogo Elfo $9.2k",
-"Pipi Avocado $9.5k",
-"Pinealotto Fruttarino $9.7k",
-"Cappuccino Assassino $10k",
-"Bandito Axolito $12.5k",
-"Brr Brr Patapim $15k",
-"Avocadini Antilopini $17.5k",
-"Trulimero Trulicina $20k",
-"Bambini Crostini $22.5k",
-"Malame Amarele $23.5k",
-"Vampira Cappucina $24.5M",
-"Bananita Dolphinita $25k",
-"Perochello Lemonchello $27.5k",
-"Brri Brri Bicus Dicus Bombicus $30k",
-"Avocadini Guffo $35k",
-"Burbaloni Loliloli $35k",
-"Ti Ti Ti Sahur $37.5k",
-"Mangolini Parrocini $38.5k",
-"Frogato Pirato $39k",
-"Salamino Penguino $40k",
-"Doi Doi Do $41k",
-"Penguin Tree $42k",
-"Wombo Rollo $42.5k",
-"Penguino Cocosino $45k",
-"Mummio Rappitto $47.5k",
-"Chimpanzini Bananini $50k",
-"Tirilikalika Tirilikalako $75k",
-"Ballerina Cappuccina $100k",
-"Chef Crabracadabra $150k",
-"Lionel Cactuseli $175k",
-"Glorbo Fruttodrillo $200k",
-"Quivioli Ameleonni $225k",
-"Blueberrinni Octopusini $250k",
-"Clickerino Crabo $250k",
-"Perrito Burrito $250M",
-"Los Lucky Blocks $250M",
-"Caramello Filtrello $255k",
-"Pipi Potato $265k",
-"Strawberrelli Flamingelli $275k",
-"Cocosini Mama $285k",
-"Pandaccini Bananini $300k",
-"Quackula $310k",
-"Pi Pi Watermelon $315k",
-"Signore Carapace $320k",
-"Sigma Boy $325k",
-"Chocco Bunny $327.5k",
-"Puffaball $330k",
-"Sigma Girl $340k",
-"Sealo Regalo $342.5k",
-"Buho de Fuego $345k",
-"Frigo Camelo $350k",
-"Orangutini Ananassini $400k",
-"Rhino Toasterino $450k",
-"Bombardiro Crocodilo $500k",
-"Brutto Gialutto $600k",
-"Spioniro Golubiro $750k",
-"Bombombini Gusini $1M",
-"Zibra Zubra Zibralini $1.5M",
-"Tigrilini Watermelini $1.75M",
-"Avocadorilla $2M",
-"Mythic Lucky Block $2.5M",
-"Cavallo Virtuoso $2.5M",
-"Gorillo Subwoofero $2.75M",
-"Gorillo Watermelondrillo $3M",
-"Stoppo Luminino $3M",
-"Tob Tobi Tobi $3.25M",
-"Lerulerulerule $3.5M",
-"Ganganzelli Trulala $3.75M",
-"Te Te Te Sahur $4M",
-"Rhino Helicopterino $4.1M",
-"Magi Ribbitini $4.2M",
-"Tracoducotulu Delapeladustuz $4.25M",
-"Jingle Jingle Sahur $4.3M",
-"Los Noobinis $4.35M",
-"Cachorrito Melonito $4.4M",
-"Carloo $4.5M",
-"Elefanto Frigo $4.6M",
-"Carrotini Brainini $4.75M",
-"Centrucci Nuclucci $4.8M",
-"Toiletto Focaccino $4.85M",
-"Jacko Spaventosa $4.875M",
-"Bananito Bandito $4.9M",
-"Tree Tree Tree Sahur $4.95M",
-"Cocofanto Elefanto $5M",
-"Antonio $6M",
-"Girafa Celestre $7.5M",
-"Gattatino Nyanino $7.5M",
-"Chihuanini Taconini $8.5M",
-"Tralalero Tralala $10M",
-"Matteo $10M",
-"Los Crocodillitos $12.5M",
-"Tigroligre Frutonni $14M",
-"Odin Din Din Dun $15M",
-"Alessio $17.5M",
-"Money Money Man $17.5M",
-"Unclito Samito $20M",
-"Tipi Topi Taco $20M",
-"Tralalita Tralala $20M",
-"Tukanno Bananno $22.5M",
-"Extinct Ballerina $23.5M",
-"Trenostruzzo Turbo 3000 $25M",
-"Orcalero Orcala $25M",
-"Espresso Signora $25M",
-"Brainrot God Lucky Block $25M",
-"Trippi Troppi Troppa Trippa $30M",
-"Urubini Flamenguini $30M",
-"Jacko Jack Jack $30M",
-"Capi Taco $31M",
-"Los Chihuaninis $32M",
-"Gattito Tacoto $32.5M",
-"Las Capuchinas $32.5M",
-"Ballerino Lololo $35M",
-"Bulbito Bandito Traktorito $35M",
-"Ballerina Peppermintina $37.5M",
-"Los Tungtungtungcitos $37.5M",
-"Pakrahmatmamat $37.5M",
-"Piccione Macchina $40M",
-"Brr es Teh Patipum $40M",
-"Pakrahmatmatina $40.5M",
-"Los Bombinitos $42.5M",
-"Tractoro Dinosauro $42.5M",
-"Los Orcalitos $45M",
-"Tartaruga Cisterna $45M",
-"Cacasito Satalito $45M",
-"Orcalita Orcala $45M",
-"Corn Corn Corn Sahur $45M",
-"Squalanana $45M",
-"Snailenzo $45M",
-"Mummy Ambalabu $45M",
-"Dug dug dug $45.5M",
-"Aquanaut $45.5M",
-"Ginger Globo $45.75M",
-"Yeti Claus $45.75M",
-"Crabbo Limonetta $46M",
-"Los Tipi Tacos $46M",
-"Granchiello Spiritell $46M",
-"Frio Ninja $46.5M",
-"Piccionetta Macchina $47M",
-"Mastodontico Telepiedone $47.5M",
-"Bambu Bambu Sahur $47.5M",
-"Los Gattitos $47.5M",
-"Anpali Babel $48M",
-"Cappuccino Clownino $48.5M",
-"Bombardini Tortinii $50M",
-"La Vacca Saturno Saturnita $50M",
-"Taco Lucky Block $50M",
-"Brasilini Berimbini $55M",
-"Belula Beluga $60M",
-"Krupuk Pagi Pagi $60M",
-"Skull Skull Skull $60M",
-"Tentacolo Tecnico $62.5M",
-"Ginger Cisterna $63.5M",
-"Pop Pop Sahur $65M",
-"Noo La Polizia $67M",
-"Sammyni Spyderini $75M",
-"Blackhole Goat $75M",
-"Bisonte Giuppitere $75M",
-"Agarrini la Palini $80M",
-"Agarrini la Palini $80M",
-"Jackorilla $80M",
-"Chachechi $85M",
-"Los Tralaleritos $100M",
-"Karkerkar Kurkur $100M",
-"Los Matteos $100M",
-"Trenostruzzo Turbo 4000 $100M",
-"Zombie Tralala $100M",
-"Los Tortus $100M",
-"Admin Lucky Block $100M",
-"La Cucaracha $110M",
-"Vulturino Skeletono $110M",
-"Boatito Auratito $115M",
-"Guerriro Digitale $120M",
-"Torrtuginni Dragonfrutini $125M",
-"Los Spyderinis $125M",
-"Fragola La La La $125M",
-"Extinct Tralalero $125M",
-"Yess my examine $130M",
-"Extinct Matteo $140M",
-"Las Tralaleritas $150M",
-"Dul Dul Dul $150M",
-"La Vacca Prese Presente $160M",
-"Reindeer Tralala $160M",
-"La Karkerkar Combinasion $160M",
-"Pumpkini Spyderini $165M",
-"Job Job Job Sahur $175M",
-"Frankentteo $175M",
-"Karker Sahur $185M",
-"Las Vaquitas Saturnitas $200M",
-"Los Karkeritos $200M",
-"Santteo $210M",
-"La Vacca Jacko Linterino $225M",
-"Trickolino $235M",
-"Giftini Spyderini $240M",
-"Graipuss Medussi $250M",
-"1x1x1x1 $255.5M",
-"Los Cucarachas $300M",
-"Los Taco Blocks $300M",
-"Spooky Lucky Block $350M",
-"Please my Present $350M",
-"Cuadramat and Pakrahmatmamat $400M",
-"Nooo My Hotspot $500M",
-"Los Jobcitos $500M",
-"Tung Tung Tung Sahur $500M",
-"Coffin Tung Tung Tung Sahur $500M",
-"Festive Lucky Block $500M",
-"Noo my examine $525M",
-"Telemorte $550M",
-"List List List Sahur $550M",
-"La Sahur Combinasion $550M",
-"To to to Sahur $575M",
-"Pot Hotspot $600M",
-"Pirulitoita Bicicleteira $600M",
-"25 $600M",
-"Horegini Boom $650M",
-"Quesadilla Crocodila $700M",
-"Pot Pumpkin $700M",
-"Ho Ho Ho Sahur $725M",
-"Secret Lucky Block $750M",
-"Chicleteira Bicicleteira $750M",
-"Quesadillo Vampiro $750M",
-"Burrito Bandito $850M",
-"Chicleteirina Bicicleteirina $850M",
-"Los Quesadillas $875M",
-"Noo my Candy $900M",
-"La Grande Combinasion $1B",
-"Los Nooo My Hotspotsitos $1B",
-"Rang Ring Bus $1.1B",
-"Guest 666 $1.1B",
-"Los Chicleteiras $1.2B",
-"67 $1.2B",
-"Los Burritos $1.4B",
-"Mariachi Corazoni $1.7B",
-"Swag Soda $1.8B",
-"Chicleteira Noelteira $2B",
-"Los Combinasionas $2B",
-"Fishino Clownino $2.1B",
-"Tacorita Bicicleta $2.2B",
-"Nuclearo Dinossauro $2.5B",
-"Las Sis $2.5B",
-"Chillin Chili $2.5B",
-"Chipso and Queso $2.5B",
-"Los Bros $2.6B",
-"Money Money Puggy $2.6B",
-"Los Mobilis $2.7B",
-"Celularcini Viciosini $2.7B",
-"Mieteteira Bicicleteira $2.7B",
-"Los Planitos $2.7B",
-"Los 67 $2.7B",
-"Gobblino Uniciclino $2.8B",
-"La Spooky Grande $2.9B",
-"Los Hotspotsitos $3B",
-"Tralaledon $3B",
-"Los Puggies $3B",
-"Los Spooky Combinasionas $3B",
-"W or L $3B",
-"La Extinct Grande $3.2B",
-"Esok Sekolah $3.5B",
-"La Jolly Grande $3.5B",
-"Los Primos $3.7B",
-"Eviledon $3.8B",
-"Los Tacoritas $4B",
-"Tang Tang Keletang $4.5B",
-"La Taco Combinasion $5B",
-"Ketupat Kepat $5B",
-"Tictac Sahur $6B",
-"La Supreme Combinasion $7B",
-"Orcaledon $7B",
-"Ketchuru and Musturu $7.5B",
-"Garama and Madundung $10B",
-"Spaghetti Tualetti $15B",
-"Los Spaghettis $20B",
-"Spooky and Pumpky $25B",
-"Lavadorito Spinito $30B",
-"La Casa Boo $40B",
-"Fragrama and Chocrama $40B",
-"La Secret Combinasion $50B",
-"Burguro And Fryuro $75B",
-"Cooki and Milki $100B",
-"Capitano Moby $125B",
-"Headless Horseman $150B",
-"Dragon Cannelloni $250B",
-"Meowl $400B",
-"Strawberry Elephant $500B"
+    -- Items của bạn
 }
 
 local boughtPrompts = {}
@@ -323,7 +24,7 @@ local gui = nil
 local mainFrame = nil
 local menuVisible = true
 
--- Create GUI (Pulsar X Style)
+-- Create GUI (Landscape Style)
 local function createGUI()
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "AutoBuyMenu"
@@ -347,11 +48,11 @@ local function createGUI()
     toggleMenuCorner.CornerRadius = UDim.new(0, 8)
     toggleMenuCorner.Parent = toggleMenuBtn
     
-    -- Main Frame (Pulsar X size: ~440x620)
+    -- Main Frame (Landscape - 580x380)
     local frame = Instance.new("Frame")
     frame.Name = "MainFrame"
-    frame.Size = UDim2.new(0, 440, 0, 620)
-    frame.Position = UDim2.new(0.5, -220, 0.5, -310)
+    frame.Size = UDim2.new(0, 580, 0, 380)
+    frame.Position = UDim2.new(0.5, -290, 0.5, -190)
     frame.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
     frame.BorderSizePixel = 0
     frame.Active = true
@@ -438,14 +139,14 @@ local function createGUI()
     -- Content Area
     local content = Instance.new("Frame")
     content.Name = "Content"
-    content.Size = UDim2.new(1, -32, 1, -100)
+    content.Size = UDim2.new(1, -32, 1, -80)
     content.Position = UDim2.new(0, 16, 0, 60)
     content.BackgroundTransparency = 1
     content.Parent = frame
     
     -- Select Brainrots Section
     local selectSection = Instance.new("Frame")
-    selectSection.Size = UDim2.new(1, 0, 0, 85)
+    selectSection.Size = UDim2.new(1, 0, 0, 60)
     selectSection.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
     selectSection.BorderSizePixel = 0
     selectSection.Parent = content
@@ -455,8 +156,8 @@ local function createGUI()
     selectCorner.Parent = selectSection
     
     local selectTitle = Instance.new("TextLabel")
-    selectTitle.Size = UDim2.new(1, -20, 0, 20)
-    selectTitle.Position = UDim2.new(0, 12, 0, 8)
+    selectTitle.Size = UDim2.new(1, -20, 0, 18)
+    selectTitle.Position = UDim2.new(0, 12, 0, 6)
     selectTitle.BackgroundTransparency = 1
     selectTitle.Text = "Select Brainrots"
     selectTitle.TextColor3 = Color3.fromRGB(180, 180, 190)
@@ -467,11 +168,11 @@ local function createGUI()
     
     local selectedDisplay = Instance.new("TextLabel")
     selectedDisplay.Name = "SelectedDisplay"
-    selectedDisplay.Size = UDim2.new(1, -24, 0, 35)
-    selectedDisplay.Position = UDim2.new(0, 12, 0, 30)
+    selectedDisplay.Size = UDim2.new(1, -24, 0, 20)
+    selectedDisplay.Position = UDim2.new(0, 12, 0, 24)
     selectedDisplay.BackgroundTransparency = 1
-    selectedDisplay.Text = "Noobini Pizzanini, Secret Lucky Block..."
-    selectedDisplay.TextColor3 = Color3.fromRGB(100, 180, 255)
+    selectedDisplay.Text = "No items selected"
+    selectedDisplay.TextColor3 = Color3.fromRGB(120, 120, 130)
     selectedDisplay.TextSize = 11
     selectedDisplay.Font = Enum.Font.Gotham
     selectedDisplay.TextXAlignment = Enum.TextXAlignment.Left
@@ -481,8 +182,8 @@ local function createGUI()
     
     local editBtn = Instance.new("TextButton")
     editBtn.Name = "EditBtn"
-    editBtn.Size = UDim2.new(0, 60, 0, 28)
-    editBtn.Position = UDim2.new(1, -72, 1, -36)
+    editBtn.Size = UDim2.new(0, 60, 0, 26)
+    editBtn.Position = UDim2.new(1, -72, 1, -30)
     editBtn.BackgroundColor3 = Color3.fromRGB(45, 110, 200)
     editBtn.Text = "Edit"
     editBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -497,8 +198,8 @@ local function createGUI()
     
     -- Auto Purchase Toggle
     local autoSection = Instance.new("Frame")
-    autoSection.Size = UDim2.new(1, 0, 0, 50)
-    autoSection.Position = UDim2.new(0, 0, 0, 95)
+    autoSection.Size = UDim2.new(1, 0, 0, 45)
+    autoSection.Position = UDim2.new(0, 0, 0, 68)
     autoSection.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
     autoSection.BorderSizePixel = 0
     autoSection.Parent = content
@@ -546,8 +247,8 @@ local function createGUI()
     -- Search Frame
     local searchFrame = Instance.new("Frame")
     searchFrame.Name = "SearchFrame"
-    searchFrame.Size = UDim2.new(1, 0, 0, 40)
-    searchFrame.Position = UDim2.new(0, 0, 0, 155)
+    searchFrame.Size = UDim2.new(1, 0, 0, 38)
+    searchFrame.Position = UDim2.new(0, 0, 0, 121)
     searchFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
     searchFrame.BorderSizePixel = 0
     searchFrame.Visible = false
@@ -575,8 +276,8 @@ local function createGUI()
     -- Scroll Frame
     local scrollFrame = Instance.new("ScrollingFrame")
     scrollFrame.Name = "ScrollFrame"
-    scrollFrame.Size = UDim2.new(1, 0, 1, -205)
-    scrollFrame.Position = UDim2.new(0, 0, 0, 205)
+    scrollFrame.Size = UDim2.new(1, 0, 1, -167)
+    scrollFrame.Position = UDim2.new(0, 0, 0, 167)
     scrollFrame.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
     scrollFrame.BorderSizePixel = 0
     scrollFrame.ScrollBarThickness = 4
@@ -604,8 +305,8 @@ local function createGUI()
     -- Status Bar
     local statusBar = Instance.new("Frame")
     statusBar.Name = "StatusBar"
-    statusBar.Size = UDim2.new(1, 0, 0, 40)
-    statusBar.Position = UDim2.new(0, 0, 1, -50)
+    statusBar.Size = UDim2.new(1, 0, 0, 38)
+    statusBar.Position = UDim2.new(0, 0, 1, -46)
     statusBar.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
     statusBar.BorderSizePixel = 0
     statusBar.Parent = content
@@ -750,6 +451,18 @@ end
 local function matchesTarget(text)
     if not text then return false end
     text = text:lower()
+    
+    -- Kiểm tra có item nào được chọn không
+    local hasSelection = false
+    for _ in pairs(config.selectedItems) do
+        hasSelection = true
+        break
+    end
+    
+    -- Nếu không có item nào được chọn, return false
+    if not hasSelection then return false end
+    
+    -- Kiểm tra text có khớp với item đã chọn
     for item in pairs(config.selectedItems) do
         if text:find(item:lower(), 1, true) then
             return true
@@ -828,8 +541,8 @@ autoToggle.MouseButton1Click:Connect(function()
     local targetPos = config.autoEnabled and UDim2.new(1, -21, 0.5, -9) or UDim2.new(0, 3, 0.5, -9)
     local targetColor = config.autoEnabled and Color3.fromRGB(50, 200, 80) or Color3.fromRGB(60, 60, 75)
     
-    game:GetService("TweenService"):Create(toggleCircle, TweenInfo.new(0.2), {Position = targetPos}):Play()
-    game:GetService("TweenService"):Create(autoToggle, TweenInfo.new(0.2), {BackgroundColor3 = targetColor}):Play()
+    TweenService:Create(toggleCircle, TweenInfo.new(0.2), {Position = targetPos}):Play()
+    TweenService:Create(autoToggle, TweenInfo.new(0.2), {BackgroundColor3 = targetColor}):Play()
     
     statusLabel.Text = "Status: "..(config.autoEnabled and "🟢 Active" or "⚫ Idle")
 end)
@@ -838,6 +551,7 @@ searchBox:GetPropertyChangedSignal("Text"):Connect(function()
     populateItems(scrollFrame, searchBox.Text, selectedDisplay)
 end)
 
+-- Auto Purchase Loop
 task.spawn(function()
     while true do
         if config.autoEnabled then
@@ -851,12 +565,13 @@ task.spawn(function()
     end
 end)
 
+-- Character Respawn Handler
 player.CharacterAdded:Connect(function(newChar)
     character = newChar
     humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 end)
 
 print("═══════════════════════════════════")
-print("✓ Pulsar X Auto Buy Loaded")
+print("✓ Pulsar X Auto Buy Loaded (Landscape)")
 print("✓ Click ☰ to toggle menu")
 print("═══════════════════════════════════")
